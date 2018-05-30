@@ -24,17 +24,67 @@ namespace MvcIntegrationTestFramework.Hosting
         /// </summary>
         public static bool LoadAllBinaries = false;
 
+        /// <summary>
+        /// If set to true, the proxy will try to resolve assembly mismatches by name alone.
+        /// If set to fale, default assembly resolving will be used. Defaults to false
+        /// </summary>
+        public static bool IgnoreVersions = false;
+
         private readonly AppDomainProxy _appDomainProxy; // The gateway to the ASP.NET-enabled .NET appdomain
 
         private AppHost(string appPhysicalDirectory, string virtualDirectory)
         {
             _appDomainProxy = (AppDomainProxy) ApplicationHost.CreateApplicationHost(typeof(AppDomainProxy), virtualDirectory, appPhysicalDirectory);
+
+            if (IgnoreVersions)
+            {
+                AddAssemblyResolver(appPhysicalDirectory);
+            }
+
             _appDomainProxy.RunCodeInAppDomain(() =>
             {
                 InitializeApplication();
                 FilterProviders.Providers.Add(new InterceptionFilterProvider());
                 LastRequestData.Reset();
             });
+        }
+
+        private void AddAssemblyResolver(string appPhysicalDirectory)
+        {
+            _appDomainProxy.RunCodeInAppDomain(baseDir =>
+            {
+                AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+                {
+                    var tokens = args.Name.Split(",".ToCharArray());
+                    string assemblyCulture;
+                    string assemblyName = tokens[0];
+                    string assemblyFileName = assemblyName.Replace(".resources", "") + ".dll";
+                    string assemblyPath;
+                    if (tokens.Length < 2) assemblyCulture = null;
+                    else assemblyCulture = tokens[2].Substring(tokens[2].IndexOf('=') + 1);
+
+                    if (assemblyName.EndsWith(".resources"))
+                    {
+                        // Specific resources are located in app subdirectories
+                        string resourceDirectory = Path.Combine(baseDir, assemblyCulture ?? "en");
+
+                        assemblyPath = Path.Combine(resourceDirectory, assemblyName + ".dll");
+                        if (File.Exists(assemblyPath)) return Assembly.LoadFile(assemblyPath);
+                    }
+
+                    assemblyPath = Path.Combine(baseDir, assemblyFileName);
+
+                    try
+                    {
+                        return Assembly.LoadFile(assemblyPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        return null;
+                    }
+                };
+            }, Path.Combine(appPhysicalDirectory, "bin"));
         }
 
         /// <summary>
@@ -155,7 +205,7 @@ namespace MvcIntegrationTestFramework.Hosting
             var stepManager = stepManagerField.GetValue(appInstance);
             var resumeStepsWaitCallback = resumeStepsWaitCallbackField.GetValue(appInstance);
             var buildStepsMethod = stepManager.GetType().GetMethod("BuildSteps", BindingFlags.NonPublic | BindingFlags.Instance);
-            buildStepsMethod.Invoke(stepManager, new[] {resumeStepsWaitCallback});
+            buildStepsMethod?.Invoke(stepManager, new[] {resumeStepsWaitCallback});
         }
 
         /// <summary>
@@ -168,7 +218,7 @@ namespace MvcIntegrationTestFramework.Hosting
 
             foreach (var file in Directory.GetFiles(baseDirectory, "*.dll"))
             {
-                var fileName = Path.GetFileName(file) ?? "";
+                var fileName = Path.GetFileName(file);
                 var destFile = Path.Combine(mvcProjectPath, "bin", fileName);
 
                 var knownAssemblies = new[] {"MvcIntegrationTestFramework.dll", "nunit.framework.dll"};

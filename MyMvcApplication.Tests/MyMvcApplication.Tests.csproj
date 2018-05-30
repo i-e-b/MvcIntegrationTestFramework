@@ -74,6 +74,7 @@
     <Compile Include="MvcFindingTests.cs" />
     <Compile Include="NameValueCollectionConversionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VersionIgnoreTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

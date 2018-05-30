@@ -8,10 +8,10 @@ using NUnit.Framework;
 
 namespace MyMvcApplication.Tests
 {
-	[TestFixture]
-	public class HomeControllerTests
-	{
-		private AppHost appHost;
+    [TestFixture]
+    public class HomeControllerTests
+    {
+        private AppHost appHost;
 
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()

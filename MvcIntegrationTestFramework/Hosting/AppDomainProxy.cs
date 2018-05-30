@@ -12,6 +12,11 @@ namespace MvcIntegrationTestFramework.Hosting
         {
             codeToRun();
         }
+        
+        public void RunCodeInAppDomain<T>(Action<T> codeToRun, T data)
+        {
+            codeToRun(data);
+        }
 
         public void RunBrowsingSessionInAppDomain(SerializableDelegate<Action<BrowsingSession>> script)
         {
