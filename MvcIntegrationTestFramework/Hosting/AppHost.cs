@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -53,6 +54,7 @@ namespace MvcIntegrationTestFramework.Hosting
         {
             _appDomainProxy.RunCodeInAppDomain(baseDir =>
             {
+                var closeList = new HashSet<string>();
                 AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
                 {
                     var tokens = args.Name.Split(",".ToCharArray());
@@ -73,10 +75,25 @@ namespace MvcIntegrationTestFramework.Hosting
                     }
 
                     assemblyPath = Path.Combine(baseDir, assemblyFileName);
+                    if (!File.Exists(assemblyPath)) {
+                        Console.WriteLine("Basis path is wrong?");
+                        return null;
+                    }
+
+                    if (closeList.Contains(assemblyFileName)){
+                        Console.WriteLine("Duplicate request");
+                        return null;
+                    }
 
                     try
                     {
-                        return Assembly.LoadFile(assemblyPath);
+                        closeList.Add(assemblyFileName);
+
+
+                        var found = Assembly.LoadFile(assemblyPath);
+
+
+                        return found;
                     }
                     catch (Exception ex)
                     {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyMvcApplication.Tests", "MyMvcApplication.Tests\MyMvcApplication.Tests.csproj", "{337FEBC1-F001-444B-BF72-A4380F5EA658}"
 EndProject
@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{C1F38723-1
 		MvcIntegrationTestFramework\MvcIntegrationTestFramework.nuspec = MvcIntegrationTestFramework\MvcIntegrationTestFramework.nuspec
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcUpgraded", "MvcUpgraded\MvcUpgraded.csproj", "{FFDEA981-A182-4A46-8C15-3B7345EC20A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,15 @@ Global
 		{3030D25F-8893-48CA-8C78-75869356DA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3030D25F-8893-48CA-8C78-75869356DA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3030D25F-8893-48CA-8C78-75869356DA68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFDEA981-A182-4A46-8C15-3B7345EC20A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFDEA981-A182-4A46-8C15-3B7345EC20A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFDEA981-A182-4A46-8C15-3B7345EC20A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFDEA981-A182-4A46-8C15-3B7345EC20A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {120DA531-DE2C-47F4-8868-AA022DE8EF7F}
 	EndGlobalSection
 EndGlobal
