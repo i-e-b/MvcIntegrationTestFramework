@@ -47,11 +47,10 @@ The framework injects it's own System.Web.Optimization bundle provider, which su
 Known issues
 ============
 
-Simple Injector
+Web Activator
 ---------------
 
-Simple Injector's `[assembly: WebActivator.PostApplicationStartMethod(...)]` injection can cause problems with the ASP.Net hosting enviroment.
-You can remove the assembly level injector and call your setup from `Global.aspx` to solve this.
+`[assembly: WebActivator.PostApplicationStartMethod(...)]` injection can cause problems with the ASP.Net hosting enviroment. If you see the error message `This method cannot be called during the application's pre-start initialization phase`, try to remove the assembly level injector and call your setup from `Global.aspx` to solve this.
 
 TFS Builds
 ----------
